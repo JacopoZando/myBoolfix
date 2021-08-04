@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>BOOLFIX</title>
+    <!-- BEBAS NEUE font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+    <!-- fontawesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- VUE -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    <!-- axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js"></script>
+
+    <!-- JS -->
+    <script src="js/script.js"></script>
+
+  </head>
+
+  <body>
+    <!-- CONTAINER CON APP -->
+    <div id="app" class="container">
+    <!-- ZONA DI RICERCA E LOGO  -->
+    <header>
+      <!-- LOGO -->
+      <div class="logoContainer">
+        <h3>BOOLFIX</h3>
+      </div>
+
+      <!-- ZONA DI RICERCA -->
+      <div class="researchArea">
+        <input
+        class="filmSearching"
+        v-model="filmSearching"
+        @keyup.enter="validateSearch()"
+        type="text" name="" value="" placeholder="Cerca il tuo FILM o SERIE TV">
+        <button
+        class="filmSearchingActivate"
+        @click="validateSearch()"
+        type="button" name="button">Cerca</button>
+      </div>
+
+    </header>
+
+    <!-- ZONA DEI RISULTATI -->
+    <main>
+        <!-- ZONA DEL FILM -->
+        <div class="moviesArea">
+          <div
+          class="newKind">
+            FILM
+          </div>
+          <div
+            v-for="film in filmCollection"
+            class="movie"
+            @mouseover="showInfoFilm(film)"
+            @mouseout="hideInfoFilm(film)"
+            >
+            <!-- VISUALIZZAZIONE DEL POSTER -->
+            <div class="posterContainer">
+            <img
+            class="poster"
+            v-if="film.poster_path != null"
+            :src="'http://image.tmdb.org/t/p/w200' + film.poster_path" alt="">
+            </div>
+
+            <!-- VISUALIZZAZIONE DELLE INFO -->
+            <div
+            class="infoContainer"
+            :class="(showInfo.show && showInfo.id == film.id) ? 'showMe' : ''">
+            <span>{{film.title}}</span>
+            <span>{{film.original_title}}</span>
+            <!-- Vedere gli attori -->
+            <span
+            v-for='act in film.actors'
+            >{{act}}</span>
+
+            <!-- BANDIERA -->
+            <img class="myFlag"
+            :src="film.original_language === 'en' ? 'img/ukFlag.png' : film.original_language === 'it' ? 'img/it.png' : 'img/allFlag.svg' " alt="Bandiera Paese">
+
+            <!-- STELLE -->
+            <div class="starContainer">
+              <img
+              class="starValue"
+              v-for="star in starGenerator(film.vote_average)"
+              src="img/star.png" alt="">
+            </div>
+            </div>
+          </div>
+          <!-- DIVISORE -->
+          <div class="newKind">
+            SERIE TV
+          </div>
+
+          <!-- INIZIO SERIE TV -->
+          <div
+          v-for="serie in serieCollection"
+          class="movie"
+          @mouseover="showInfoFilm(serie)"
+          @mouseout="hideInfoFilm(serie)"
+          >
+
+          <!-- POSTER -->
+          <div class="posterContainer">
+            <img
+            class="poster"
+            v-if="serie.poster_path != null"
+            :src="'http://image.tmdb.org/t/p/w342' + serie.poster_path" alt="">
+          </div>
+
+          <!-- INFO -->
+          <div class="infoContainer"
+            :class="(showInfo.show && showInfo.id == serie.id) ? 'showMe' : ''">
+            <span>{{serie.name}}</span>
+            <span>{{serie.original_name}}</span>
+            <!-- Vedere gli attori -->
+            <span
+            v-for='act in serie.actors'
+            >{{act}}</span>
+
+            <!-- BANDIERA -->
+            <img class="myFlag"
+            :src="serie.original_language === 'en' ? 'img/ukFlag.png' : serie.original_language === 'it' ? 'img/it.png' : 'img/allFlag.svg' " alt="Bandiera Paese">
+
+            <!-- STELLE -->
+            <div class="starContainer">
+              <img
+              class="starValue"
+              v-for="star in starGenerator(serie.vote_average)"
+              src="img/star.png" alt="">
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </body>
+</html>
